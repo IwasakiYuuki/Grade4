@@ -1,0 +1,36 @@
+a ff200
+jmp @ff300:24
+.
+da ff200 ff200
+.pc
+ff200
+.
+r
+s
+a ff300
+jmp @ff310:24
+.
+da ff300 ff300
+.pc
+ff300
+.
+r
+s
+a ff310
+bra ff280:16
+.
+da ff310 ff310
+.pc
+ff310
+.
+r
+s
+a ff280
+bra ff280:16
+.
+da ff280 ff280
+.pc
+ff280
+.
+r
+s

@@ -1,0 +1,87 @@
+mon1ex01.txt
+s15062 4J14 國友康輝
+
+1.課題
+FF200から機械語プログラムを置きなさい。
+FF700,FF701番地の2byteデータをレジスタR0に載せる
+FF702,FF703番地の2byteデータをレジスタR1に載せる
+R0からR1の値を引いてR0にしまう
+R0のデータをFF704,FF705番地にしまう
+
+作成したプログラム本体を報告に載せなさい。
+
+実行時に，FF700,FF701番地の2byteデータにはab78を
+FF702,FF703番地の2byteデータには7643をセットして全作業を報告しなさい。
+
+ただし，以下の内容を含むこと
+実行前のFF700番地?FF70F番地の様子
+プログラムの逆アッセンブル結果
+１命令ごとに実行して実行の様子
+実行後のFF700番地?FF70F番地の様子
+
+また，ｓコマンドで1ステップ進めるごとに，PC（プログラムカウンタ）
+の値が変化するが，変化量は何に依存しているのかを考察に含めなさい。
+
+2.作成したプログラム・結果
+: a ff200
+  FF200   >  mov.w @ff700:24,r0
+  FF206   >  mov.w @ff702:24,r1
+  FF20C   >  sub.w r1,r0
+  FF20E   >  mov.w r0,@ff704:24
+  FF214   >  .
+: da ff200 ff20e
+  <ADDR>  <CODE>                <MNEMONIC> <OPERAND>
+  FF200   6B20000FF700          MOV.W      @H'FF700:24,R0
+  FF206   6B21000FF702          MOV.W      @H'FF702:24,R1
+  FF20C   1910                  SUB.W      R1,R0
+  FF20E   6BA0000FF704          MOV.W      R0,@H'FF704:24
+: d ff700 ff70f
+  <ADDR>                  <  D  A  T  A  >                     < ASCII CODE >
+  FF700   FF FF FF FF FF FF F7 FF  FF FF FF FF FF FD FF FF   "................"
+: m ff700
+  FF700   FF  ?  ab
+  FF701   FF  ?  78
+  FF702   FF  ?  76
+  FF703   FF  ?  43
+  FF704   FF  ?  .
+: d ff700 ff70f
+  <ADDR>                  <  D  A  T  A  >                     < ASCII CODE >
+  FF700   AB 78 76 43 FF FF F7 FF  FF FF FF FF FF FD FF FF   ".xvC............"
+: r
+  PC=000000  CCR=80:I.......  SP=000FFF00
+  ER0=00000000  ER1=00000000  ER2=00000000  ER3=00000000
+  ER4=00000000  ER5=00000000  ER6=00000000  ER7=000FFF00
+: .pc
+  PC=000000  ?  ff200
+  CCR=80  ?  .
+: r
+  PC=0FF200  CCR=80:I.......  SP=000FFF00
+  ER0=00000000  ER1=00000000  ER2=00000000  ER3=00000000
+  ER4=00000000  ER5=00000000  ER6=00000000  ER7=000FFF00
+: s
+  PC=0FF206  CCR=88:I...N...  SP=000FFF00
+  ER0=0000AB78  ER1=00000000  ER2=00000000  ER3=00000000
+  ER4=00000000  ER5=00000000  ER6=00000000  ER7=000FFF00
+  FF200   6B20000FF700          MOV.W      @H'FF700:24,R0
+: s
+  PC=0FF20C  CCR=80:I.......  SP=000FFF00
+  ER0=0000AB78  ER1=00007643  ER2=00000000  ER3=00000000
+  ER4=00000000  ER5=00000000  ER6=00000000  ER7=000FFF00
+  FF206   6B21000FF702          MOV.W      @H'FF702:24,R1
+: s
+  PC=0FF20E  CCR=82:I.....V.  SP=000FFF00
+  ER0=00003535  ER1=00007643  ER2=00000000  ER3=00000000
+  ER4=00000000  ER5=00000000  ER6=00000000  ER7=000FFF00
+  FF20C   1910                  SUB.W      R1,R0
+: s
+  PC=0FF214  CCR=80:I.......  SP=000FFF00
+  ER0=00003535  ER1=00007643  ER2=00000000  ER3=00000000
+  ER4=00000000  ER5=00000000  ER6=00000000  ER7=000FFF00
+  FF20E   6BA0000FF704          MOV.W      R0,@H'FF704:24
+: d ff700 ff70f
+  <ADDR>                  <  D  A  T  A  >                     < ASCII CODE >
+  FF700   AB 78 76 43 35 35 F7 FF  FF FF FF FF FF FD FF FF   ".xvC55.........."
+:
+
+3.考察
+pcの変化量は機械語命令のバイト数に依存している．

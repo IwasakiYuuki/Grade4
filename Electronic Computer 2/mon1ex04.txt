@@ -1,0 +1,61 @@
+mon1ex04.txt
+s15062 4J14 š —FN‹P
+
+1.‰Û‘è
+
+2.ì¬‚µ‚½ƒvƒƒOƒ‰ƒ€
+a ff200
+mov.b #0A:8,r0l
+mov.b #00:8,r0h
+add.b #01:8,r0h
+dec.b r0l
+bne ff204:8
+mov.b r0h,r1l
+nop
+.
+da ff200 ff20c
+r
+.pc
+ff200
+.
+r
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+
+3.Œ‹‰Ê
+
+4.l@
