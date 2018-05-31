@@ -33,12 +33,12 @@ int main(){
 	show(u1,3);
 	show(u2,3);
 	show(u3,3);
-	printf("u1・u1=%lf\n",ip(u1,u1,3));
-	printf("u1・u2=%lf\n",ip(u1,u2,3));
-	printf("u2・u2=%lf\n",ip(u2,u2,3));
-	printf("u2・u3=%lf\n",ip(u2,u3,3));
-	printf("u3・u3=%lf\n",ip(u3,u3,3));
-	printf("u3・u1=%lf\n",ip(u3,u1,3));
+	printf("u1ﾂ・u1=%lf\n",ip(u1,u1,3));
+	printf("u1ﾂ・u2=%lf\n",ip(u1,u2,3));
+	printf("u2ﾂ・u2=%lf\n",ip(u2,u2,3));
+	printf("u2ﾂ・u3=%lf\n",ip(u2,u3,3));
+	printf("u3ﾂ・u3=%lf\n",ip(u3,u3,3));
+	printf("u3ﾂ・u1=%lf\n",ip(u3,u1,3));
 	a1=ip(u1,g,3);
 	printf("a1=%lf\n",a1);
 	a2=ip(u2,g,3);
