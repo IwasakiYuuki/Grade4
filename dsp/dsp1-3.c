@@ -1,52 +1,62 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 
-//innner product
-double ip( double v1[],double v2[],int n){
+
+//average of v1*v21
+double ave( double v1[],double v2[]){
 	double ip=0;
 	int i=0;
-	for(i=0;i<n;i++) ip+=v1[i]*v2[i];
-	return ip;
+	for(i=0;i<86;i++) ip+=v1[i]*v2[i];
+	return ip/86;
 }
 
-void show(double v[],int n){
-	printf("(%lf",v[0]);
-	int i=0;
-	for(i=1;i<n;i++) printf(",%lf",v[i]);
-	printf(")\n");
-
+//correlation coefficent
+double cc(double x[] ,double y[]){
+	return ave(x,y)/(sqrt(ave(x,x))*sqrt(ave(y,y)));
+}
+// read file and pretreatment
+void file(double d[86],int i){
+	FILE *fp;
+	int j;
+	double s=0,ave=0;
+	char fn[20];
+	sprintf(fn,"rdata%d.txt",i);
+	fp=fopen(fn,"r");
+	if(fp==NULL){
+		printf("can't open the file \n");
+		exit(1);
+	}
+	for(j=0;j<86;j++){
+		fscanf(fp,"%lf",&d[j]);
+		s+=d[j];
+	}
+	fclose(fp);
+	ave=s/86;
+	for(j=0;j<86;j++) d[j]-=ave;
 }
 
 int main(){
-	double g[3]={2,-1,1};
-	double u1[3]={1,0,0};
-	double u2[3]={0,sqrt(2)/2,sqrt(2)/2};
-	double u3[3]={0,sqrt(2)/2,-sqrt(2)/2};
-	double a1=0;
-	double a2=0;
-	double a3=0;
-	int i=0;
+	double d1[86];
+	double d2[86];
+	double d3[86];
+	double d4[86];
+	double ave[4];
+	int i=0,j=0,k=0,sum=0;
 	double ug[3];
+	
+	file(d1,1);
+	file(d2,2);
+	file(d3,3);
+	file(d4,4);
 
-
-	show(u1,3);
-	show(u2,3);
-	show(u3,3);
-	printf("u1Eu1=%lf\n",ip(u1,u1,3));
-	printf("u1Eu2=%lf\n",ip(u1,u2,3));
-	printf("u2Eu2=%lf\n",ip(u2,u2,3));
-	printf("u2Eu3=%lf\n",ip(u2,u3,3));
-	printf("u3Eu3=%lf\n",ip(u3,u3,3));
-	printf("u3Eu1=%lf\n",ip(u3,u1,3));
-	a1=ip(u1,g,3);
-	printf("a1=%lf\n",a1);
-	a2=ip(u2,g,3);
-	printf("a2=%lf\n",a2);
-	a3=ip(u3,g,3);
-	printf("a3=%lf\n",a3);
-	printf("g=");
-	for(i=0;i<3;i++) ug[i]+=a1*u1[i]+a2*u2[i]+a3*u3[i];
-	show(ug,3);
+	printf("d1 & d2 r=%lf\n",cc(d1,d2));
+	printf("d1 & d3 r=%lf\n",cc(d1,d3));
+	printf("d1 & d4 r=%lf\n",cc(d1,d4));
+	//printf("d2 & d3 r=%lf\n",cc(d2,d3));
+	//printf("d2 & d4 r=%lf\n",cc(d2,d4));
+	//printf("d3 & d4 r=%lf\n",cc(d3,d4));
 	return 0;
 }
