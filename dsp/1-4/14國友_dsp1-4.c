@@ -18,7 +18,7 @@ double cf(double x[] ,double y[], int m, int n)
 }
 
 //make file
-/*void output(double x[], double y[], int n)
+void output(double x[], double y[], int n)
 {
 	FILE *fp;
 	int i,num;
@@ -35,7 +35,7 @@ double cf(double x[] ,double y[], int m, int n)
 	for(i=0;i<num;i++) fprintf(fp,"%lf\n",cf(x,y,i,num));
 	fclose(fp);
 	return;
-}*/
+}
 
 // read file
 void file(double d[],int i)
@@ -69,8 +69,8 @@ int main()
 	file(d1,1);
 	file(d2,2);
 	file(d3,3);
-	//output(d1,d2,1);
-	//output(d3,d3,3);
+	output(d1,d2,1);
+	output(d3,d3,3);
 
 	printf("＊＊＊H30年度・DSP1-4・番号14＊＊＊\n");
 	printf("相互相関用のデータはdata1とdata2, 自己相関用のデータはdata3にファイル名を変えて実行してください。\n");
