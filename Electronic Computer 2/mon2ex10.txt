@@ -1,0 +1,185 @@
+mon2ex10.txt
+s15062 4J14 國友康輝
+
+1.課題
+FF200から機械語プログラムを置きなさい。
+C言語の関数インターフェイス（引数，関数の値の返し方）で２つのint型（2バイト）の引数2つを
+受取り，課題６の１で作った掛け算を行い，関数の値としてint型（２バイト）の値を返すサブルーチン。
+呼び出しルーチンも次のように作りなさい。
+FF800番地 - FF801番地に2バイトの値が，FF802番地 - FF803番地に2バイトの値を引数に載 せ，
+掛け算サブルーチンを呼び出し，この2数の積を求め，FF804番地 - FF805番地に保存する。
+
+プログラム本体および以下を報告しなさい。
+プログラムが正しく動作していることを検証し，検証の様子も報告しなさい。
+検証では2×3，0x22×0x33，0xaa×0xbbを行い，手計算の値と比較しなさい。
+実行結果を貼り付けるだけでなく，まとめのところで実行検証結果についてまとめなさい。
+
+2.作成したプログラム
+     .CPU        300HA
+     .SECTION A,DATA,LOCATE=H'0FF030
+     .DATA.L H'0FF200
+    .SECTION P,CODE,LOCATE=H'0FF200
+    MOV.L  #H'FFF00,ER7
+_main:                           ; function: main
+          MOV.W       @_x10:24,E0
+          MOV.W       @_x00:24,R0
+          BSR         _mymultifunc:8
+          MOV.W       R0,@_y0:24
+          EternalLoop:
+              BRA EternalLoop
+_mymultifunc:                    ; function: mymultifunc
+          MOV.W       E0,R1
+          SUB.W       E0,E0
+L12:                              
+          BTST.B      #0,R1L
+          BEQ         L13:8
+          ADD.W       R0,E0
+L13:                              
+          SHLL.W      R0
+          SHAR.W      R1
+          BNE         L12:8
+          MOV.W       E0,R0
+          RTS
+
+
+
+    .SECTION D,DATA,LOCATE=H'0FF800
+_x00:                            ; static: x00
+          .DATA.W     H'0055
+_x10:                            ; static: x10
+          .DATA.W     H'000A
+_y0:                             ; static: y0
+          .RES.W      1
+          .END
+3.結果
+-----0003*0002----
+: l
+  Top Address=FF200
+  End Address=FF803
+: da ff200 ff22e
+  <ADDR>  <CODE>                <MNEMONIC> <OPERAND>
+  FF200   7A07000FFF00          MOV.L      #H'000FFF00:32,ER7
+  FF206   6B28000FF802          MOV.W      @H'FF802:24,E0
+  FF20C   6B20000FF800          MOV.W      @H'FF800:24,R0
+  FF212   5506                  BSR        FF21A:8
+  FF214   6BA0000FF804          MOV.W      R0,@H'FF804:24
+  FF21A   0D81                  MOV.W      E0,R1
+  FF21C   1988                  SUB.W      E0,E0
+  FF21E   7309                  BTST       #0:3,R1L
+  FF220   4702                  BEQ        FF224:8
+  FF222   0908                  ADD.W      R0,E0
+  FF224   1010                  SHLL.W     R0
+  FF226   1191                  SHAR.W     R1
+  FF228   46F4                  BNE        FF21E:8
+  FF22A   0D80                  MOV.W      E0,R0
+  FF22C   5470                  RTS
+  FF22E   40FE                  BRA        FF22E:8
+: .pc
+  PC=0FF200  ?  ff200
+  CCR=80  ?  .
+: m ff800
+  FF800   00  ?  00
+  FF801   55  ?  02
+  FF802   00  ?  00
+  FF803   0A  ?  03
+  FF804   06  ?  .
+: b ff22e
+: g
+
+
+ H8/3048 Series Advanced Mode Monitor Ver. 3.0A
+ Copyright (C) 2003 Renesas Technology Corp.
+
+: d ff800 ff805
+  <ADDR>                  <  D  A  T  A  >                     < ASCII CODE >
+  FF800   00 02 00 03 00 06                                  "......"
+:
+----0x22*0x33----
+: l
+  Top Address=FF200
+  End Address=FF803
+: da ff200 ff22e
+  <ADDR>  <CODE>                <MNEMONIC> <OPERAND>
+  FF200   7A07000FFF00          MOV.L      #H'000FFF00:32,ER7
+  FF206   6B28000FF802          MOV.W      @H'FF802:24,E0
+  FF20C   6B20000FF800          MOV.W      @H'FF800:24,R0
+  FF212   5506                  BSR        FF21A:8
+  FF214   6BA0000FF804          MOV.W      R0,@H'FF804:24
+  FF21A   0D81                  MOV.W      E0,R1
+  FF21C   1988                  SUB.W      E0,E0
+  FF21E   7309                  BTST       #0:3,R1L
+  FF220   4702                  BEQ        FF224:8
+  FF222   0908                  ADD.W      R0,E0
+  FF224   1010                  SHLL.W     R0
+  FF226   1191                  SHAR.W     R1
+  FF228   46F4                  BNE        FF21E:8
+  FF22A   0D80                  MOV.W      E0,R0
+  FF22C   5470                  RTS
+  FF22E   40FE                  BRA        FF22E:8
+: .pc
+  PC=0FF200  ?  ff200
+  CCR=80  ?  .
+: m ff800
+  FF800   00  ?  00
+  FF801   55  ?  22
+  FF802   00  ?  00
+  FF803   0A  ?  33
+  FF804   FF  ?  .
+: b ff22e
+: g
+
+
+ H8/3048 Series Advanced Mode Monitor Ver. 3.0A
+ Copyright (C) 2003 Renesas Technology Corp.
+
+: d ff800 ff805
+  <ADDR>                  <  D  A  T  A  >                     < ASCII CODE >
+  FF800   00 22 00 33 06 C6                                  ".".3.."
+:
+----0xaa*0xbb----
+: l
+  Top Address=FF200
+  End Address=FF803
+: da ff200 ff22e
+  <ADDR>  <CODE>                <MNEMONIC> <OPERAND>
+  FF200   7A07000FFF00          MOV.L      #H'000FFF00:32,ER7
+  FF206   6B28000FF802          MOV.W      @H'FF802:24,E0
+  FF20C   6B20000FF800          MOV.W      @H'FF800:24,R0
+  FF212   5506                  BSR        FF21A:8
+  FF214   6BA0000FF804          MOV.W      R0,@H'FF804:24
+  FF21A   0D81                  MOV.W      E0,R1
+  FF21C   1988                  SUB.W      E0,E0
+  FF21E   7309                  BTST       #0:3,R1L
+  FF220   4702                  BEQ        FF224:8
+  FF222   0908                  ADD.W      R0,E0
+  FF224   1010                  SHLL.W     R0
+  FF226   1191                  SHAR.W     R1
+  FF228   46F4                  BNE        FF21E:8
+  FF22A   0D80                  MOV.W      E0,R0
+  FF22C   5470                  RTS
+  FF22E   40FE                  BRA        FF22E:8
+: .pc
+  PC=0FF200  ?  ff200
+  CCR=80  ?  .
+: m ff800
+  FF800   00  ?  00
+  FF801   55  ?  aa
+  FF802   00  ?  00
+  FF803   0A  ?  bb
+  FF804   00  ?  .
+: b ff22e
+: g
+
+
+ H8/3048 Series Advanced Mode Monitor Ver. 3.0A
+ Copyright (C) 2003 Renesas Technology Corp.
+
+: d ff800 ff805
+  <ADDR>                  <  D  A  T  A  >                     < ASCII CODE >
+  FF800   00 AA 00 BB 7C 2E                                  "....|."
+:
+4.考察
+2*3=6
+0x22*0x33=0x06C6
+0xaa*0xbb=0x7C2E
+計算があっている

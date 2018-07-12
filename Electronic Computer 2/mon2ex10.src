@@ -1,0 +1,33 @@
+     .CPU        300HA
+    .SECTION P,CODE,LOCATE=H'0FF200
+    MOV.L  #H'FFF00,ER7
+_main:                           ; function: main
+          MOV.W       @_x10:24,E0
+          MOV.W       @_x00:24,R0
+          BSR         _mymultifunc:8
+          MOV.W       R0,@_y0:24
+_mymultifunc:                    ; function: mymultifunc
+          MOV.W       E0,R1
+          SUB.W       E0,E0
+L12:                              
+          BTST.B      #0,R1L
+          BEQ         L13:8
+          ADD.W       R0,E0
+L13:                              
+          SHLL.W      R0
+          SHAR.W      R1
+          BNE         L12:8
+          MOV.W       E0,R0
+          RTS
+          EternalLoop:
+              BRA EternalLoop
+
+
+    .SECTION D,DATA,LOCATE=H'0FF800
+_x00:                            ; static: x00
+          .DATA.W     H'0055
+_x10:                            ; static: x10
+          .DATA.W     H'000A
+_y0:                             ; static: y0
+          .RES.W      1
+          .END

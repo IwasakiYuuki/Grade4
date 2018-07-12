@@ -1,0 +1,50 @@
+          .CPU        300HA
+    .SECTION P,CODE,LOCATE=H'0FF200
+    MOV.L  #H'FFF00,ER7
+_main:                           ; function: main
+          MOV.W       @_x10:24,E0
+          MOV.W       @_x00:24,R0
+          BSR         _div:8
+          MOV.W       R0,@_y:24
+_div:                            ; function: div
+          PUSH.W      E5
+          MOV.W       R0,E1
+          SUB.W       E5,E5
+          MOV.W       #1:16,R1
+          BRA         L16:8
+L15:                              
+          SHLL.W      E0
+          SHLL.W      R1
+L16:                              
+          CMP.W       E1,E0
+          BCC         L19:8
+          MOV.W       E0,R0
+          AND.W       #-32768:16,R0
+          CMP.W       #-32768:16,R0
+          BNE         L15:8
+          BRA         L19:8
+L18:                              
+          CMP.W       E1,E0
+          BHI         L20:8
+          SUB.W       E0,E1
+          ADD.W       R1,E5
+L20:                              
+          SHLR.W      E0
+          SHLR.W      R1
+L19:                              
+          MOV.W       R1,R1
+          BNE         L18:8
+          MOV.W       E5,R0
+          POP.W       E5
+          RTS
+          EternalLoop:
+              BRA EternalLoop
+
+    .SECTION D,DATA,LOCATE=H'0FF800
+_x00:                            ; static: x00
+          .RES.W      1
+_x10:                            ; static: x10
+          .RES.W      1
+_y:                              ; static: y
+          .RES.W      1
+          .END

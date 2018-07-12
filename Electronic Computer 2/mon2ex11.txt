@@ -1,0 +1,127 @@
+mon2ex11.txt
+s15062 4J14 國友康輝
+
+1.課題
+FF200から機械語プログラムを置きなさい。
+C言語の関数インターフェイス（引数，関数の値の返し方）で２つのint型（2バイト）の引数2つを
+受取り，課題６の２で作った割り算を行い，商だけを関数の値として返すサブルーチン。
+（余りは返さない）
+割り算は第1引数÷第2引数の演算とする。
+呼び出しルーチンも次のように作りなさい。
+FF800番地 - FF801番地に2バイトの値（割られる数）が，FF802番地 - FF803番地に2バイ トの値
+（割る数）があるものとし，これらを引数に載せ，
+割り算サブルーチンを呼び出し，この2数の商を求め，
+サブルーチンが返してきた値をFF804番地 -  FF805番地に保存する。
+
+プログラム本体および以下を報告しなさい。
+プログラムが正しく動作していることを検証し，検証の様子も報告しなさい。
+検証では3÷2，0x1000÷0x33，0xaaaa÷0xbbを行い，手計算の値と比較しなさい。
+実行結果を貼り付けるだけでなく，まとめのところで実行検証結果についてまとめなさい。
+
+2.作成したプログラム
+
+3.結果
+----3/2----
+l
+  Top Address=FF200
+  End Address=FF253
+: da ff200 ff252
+  <ADDR>  <CODE>                <MNEMONIC> <OPERAND>
+  FF200   7A07000FFF00          MOV.L      #H'000FFF00:32,ER7
+  FF206   6B28000FF802          MOV.W      @H'FF802:24,E0
+  FF20C   6B20000FF800          MOV.W      @H'FF800:24,R0
+  FF212   5506                  BSR        FF21A:8
+  FF214   6BA0000FF804          MOV.W      R0,@H'FF804:24
+  FF21A   6DFD                  PUSH.W     E5
+  FF21C   0D09                  MOV.W      R0,E1
+  FF21E   19DD                  SUB.W      E5,E5
+  FF220   79010001              MOV.W      #H'0001:16,R1
+  FF224   4004                  BRA        FF22A:8
+  FF226   1018                  SHLL.W     E0
+  FF228   1011                  SHLL.W     R1
+  FF22A   1D98                  CMP.W      E1,E0
+  FF22C   441A                  BCC        FF248:8
+  FF22E   0D80                  MOV.W      E0,R0
+  FF230   79608000              AND.W      #H'8000:16,R0
+  FF234   79208000              CMP.W      #H'8000:16,R0
+  FF238   46EC                  BNE        FF226:8
+  FF23A   400C                  BRA        FF248:8
+  FF23C   1D98                  CMP.W      E1,E0
+  FF23E   4204                  BHI        FF244:8
+  FF240   1989                  SUB.W      E0,E1
+  FF242   091D                  ADD.W      R1,E5
+  FF244   1118                  SHLR.W     E0
+  FF246   1111                  SHLR.W     R1
+  FF248   0D11                  MOV.W      R1,R1
+  FF24A   46F0                  BNE        FF23C:8
+  FF24C   0DD0                  MOV.W      E5,R0
+  FF24E   6D7D                  POP.W      E5
+  FF250   5470                  RTS
+  FF252   40FE                  BRA        FF252:8
+: m ff800
+  FF800   00  ?  00
+  FF801   AA  ?  03
+  FF802   00  ?  00
+  FF803   BB  ?  02
+  FF804   7C  ?  .
+: b ff252
+: g
+
+
+ H8/3048 Series Advanced Mode Monitor Ver. 3.0A
+ Copyright (C) 2003 Renesas Technology Corp.
+
+: d ff800 ff805
+  <ADDR>                  <  D  A  T  A  >                     < ASCII CODE >
+  FF800   00 03 00 02 00 01                                  "......"
+:
+----0x1000/0x33----
+: l
+  Top Address=FF200
+  End Address=FF253
+: m ff800
+  FF800   00  ?  10
+  FF801   03  ?  00
+  FF802   00  ?  00
+  FF803   02  ?  33
+  FF804   00  ?  .
+: b ff252
+: g
+
+
+ H8/3048 Series Advanced Mode Monitor Ver. 3.0A
+ Copyright (C) 2003 Renesas Technology Corp.
+
+: d ff800 ff805
+  <ADDR>                  <  D  A  T  A  >                     < ASCII CODE >
+  FF800   10 00 00 33 00 50                                  "...3.P"
+:
+----0xaaaa/0xbb----
+ H8/3048 Series Advanced Mode Monitor Ver. 3.0A
+ Copyright (C) 2003 Renesas Technology Corp.
+
+: l
+  Top Address=FF200
+  End Address=FF253
+: m ff800
+  FF800   FF  ?  aa
+  FF801   7F  ?  aa
+  FF802   FB  ?  00
+  FF803   FF  ?  bb
+  FF804   FF  ?  .
+: b ff252
+: g
+
+
+ H8/3048 Series Advanced Mode Monitor Ver. 3.0A
+ Copyright (C) 2003 Renesas Technology Corp.
+
+: d ff800 ff805
+  <ADDR>                  <  D  A  T  A  >                     < ASCII CODE >
+  FF800   AA AA 00 BB 00 E9                                  "......"
+:
+4.考察
+3/2=1
+0x1000/0x33=0x50
+0xaaaa/0xbb=0xE9
+手計算と合っている
