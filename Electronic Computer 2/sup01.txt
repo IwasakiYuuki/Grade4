@@ -1,0 +1,25 @@
+sup01.txt
+s15062 4J14 國友康輝
+
+1.課題
+(1)ex1.MAPファイルを調べ，関数main，関数msecwaitのアドレスを調べなさい。
+(2)次にex1.subの内容でSTART P(100)をSTART P(200)に変更し，動作させ，
+ex1.MAPファイルを調べ，関数main，関数msecwaitのアドレスを調べなさい。
+(3)ex1.srcファイルを調べ。関数msecwait内で使われている変数はどのような領域に
+あるのかあるいはどのようなレジスタがつかわれているのか推測しなさい。
+その他気づいたことを述べなさい。
+
+2.作成したプログラム・結果
+nullpointerexeption
+
+3.考察
+(1)
+main		00000120
+msecwait	0000010C
+(2)
+main		00000220
+msecwait	0000020C
+(3)
+msec	R0
+i		R1
+j		E0
