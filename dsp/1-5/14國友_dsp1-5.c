@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#define N 500
+#define N 50
 #define pi 3.14
 
 struct x{
@@ -39,7 +39,9 @@ void dft(int o1,int o3){
             win[i]=0.54-0.46*cos(2*pi*i/N);
             Xk[i].re*=win[i];
         }
+        printf("windowed\n");
     }
+    printf("finish dft\n");
 }
 
 
@@ -82,7 +84,9 @@ void output(char name[256],int o2)
             num=(i+1)*16;
             fprintf(fp,"%d , %0.3lf , %0.3lf\n",num,am[i],ph[i]);
         }else{
-            fprintf(fp,"%lf\n",xn[i].re );
+            double numy;
+            numy = (double)i*60/499;
+            fprintf(fp,"%lf , %lf\n",numy,xn[i].re );
         }
     }
     fclose(fp);
