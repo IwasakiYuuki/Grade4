@@ -38,7 +38,6 @@ void dft(int o1,int o3){
         for(i=0;i<N;i++){
             win[i]=0.54-0.46*cos(2*pi*i/N);
             Xk[i].re*=win[i];
-            fprintf(, "%s\n", );
         }
     }
 }
@@ -92,7 +91,8 @@ void output(char name[256],int o2)
 
 int main(){
     
-    int o1,o2,o3;
+    int o1,o2,o3,i;
+    double win[N];
     char fn[256];
     file();
     printf("DFT->0 or IDFT->1\n");
@@ -118,7 +118,7 @@ int main(){
         }
         printf("Please enter output name\n");
         scanf("%s",fn);
-        output(2);
+        output(fn,2);
     }
     return 0;
 }
