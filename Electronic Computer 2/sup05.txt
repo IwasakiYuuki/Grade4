@@ -1,0 +1,74 @@
+sup05.txt
+s15062 4J14 Koki Kunitomo
+
+1.課題
+dumpMemory.cを次のように変更し，実際に動作させ，
+メモリの内容表示の変化点を指摘しなさい。
+どうしてそのようになるのか考察しなさい。
+また調べたことも書きなさい。
+
+main()において
+
+    int count3=0x3456;
+    count2=0x2345;
+    initSCI1(); /*シリアル通信ユニットSCI1の初期化*/
+    initLed();  /*LED初期化*/
+    dumpMemory(0L,0x1130L); /*ROM領域*/
+    dumpMemory(0xfef10L,0xfef30L); /*RAM領域*/
+    while(1) {
+        SCI1_printf("%4x %4x %4x\n",count1++,count2++,count3++);
+        turnOnLed(0); /*LED0のON*/
+        turnOffLed(1); /*LED1のOFF*/
+        msecwait(250);
+        turnOffLed(0); /*LED0のOFF*/
+        turnOnLed(1); /*LED1のON*/
+        msecwait(250);
+    }
+
+の部分を
+
+    int count3=0x3456;
+    int i;
+    initSCI1(); /*シリアル通信ユニットSCI1の初期化*/
+    initLed();  /*LED初期化*/
+    dumpMemory(0L,0x1140L); /*ROM領域*/
+    dumpMemory(0xfef10L,0xfef30L); /*RAM領域*/
+    count2=0x2345;
+    dumpMemory(0xfef10L,0xfef30L); /*RAM領域*/
+    for (i=0; i<4; i++) {
+        SCI1_printf("%4x %4x %4x\n",count1++,count2++,count3++);
+        turnOnLed(0); /*LED0のON*/
+        turnOffLed(1); /*LED1のOFF*/
+        msecwait(250);
+        turnOffLed(0); /*LED0のOFF*/
+        turnOnLed(1); /*LED1のON*/
+        msecwait(250);
+    }
+    dumpMemory(0xfef10L,0xfef30L); /*RAM領域*/
+    while(1);
+
+のように変更する。
+
+2.使用したプログラム
+上記の通り．
+
+3.結果
+address +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +A +B +C +D +E +F   0123456789ABCDEF
+fef10 : 12 34 bb ff ef 2d ed 9f bd f3 ff ff af ef fd bb : .4...-..........
+fef20 : d9 ef ef ff ff ff fe ff ff f7 df ef ff cf f3 bf : ................
+
+address +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +A +B +C +D +E +F   0123456789ABCDEF
+fef10 : 12 34 bb ff ef 2d 23 45 bd f3 ff ff af ef fd bb : .4...-#E........
+fef20 : d9 ef ef ff ff ff fe ff ff f7 df ef ff cf f3 bf : ................
+
+1234 2345 3456
+1235 2346 3457
+1236 2347 3458
+1237 2348 3459
+address +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +A +B +C +D +E +F   0123456789ABCDEF
+fef10 : 12 38 bb ff ef 2d 23 49 bd f3 ff ff af ef fd bb : .8...-#I........
+fef20 : d9 ef ef ff ff ff fe ff ff f7 df ef ff cf f3 bf : ................
+
+4.考察
+二回目のRAM領域の表示では，既にcount2の値が指定されていたので，fef10の6,7番アドレスに2345が代入された．
+ループが終了した後に確認したら，ループした回数値が増えていた．
