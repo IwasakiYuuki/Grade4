@@ -6,7 +6,9 @@
 int main(){
 
     int n,a1,a2,a3,c1,c2,c3=0;
-    for(n=0;n<INT_MAX;n++){
+	n=a1=a2=a3=c1=c2=c3;
+	srand((unsigned )time(NULL));
+    for(n=0;n<10000;n++){
         int A=0;
         int B=0;
         int C=0;
